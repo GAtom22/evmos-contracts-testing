@@ -7,22 +7,18 @@
 const hre = require("hardhat");
 
 async function main() {
-  // change here the address of the validator you want to stake to
-  const valAddr = "evmosvaloper19qays6qcacmtyzq86spuyrz56sl6lrf55nht68"; 
-  
-  const stakeAmount = hre.ethers.parseEther("0.001");
+  const gasAmount = 500_000;
 
-  const staking = await hre.ethers.getContractAt(
-    "StakingI",
-    "0x0000000000000000000000000000000000000800"
-  );
+  const consumer = await hre.ethers.getContractFactory("GasConsumer");
+  const contract = await consumer.deploy();
 
-  const [signer] = await hre.ethers.getSigners();
-  const tx = await staking.delegate(signer, valAddr, stakeAmount);
+  console.log(`GasConsumer contract deployed at ${await contract.getAddress()}`)
+
+  const tx = await contract.go(gasAmount);
   const receipt = await tx.wait(1);
 
   console.log(
-    `Staked ${ethers.formatEther(stakeAmount)} EVMOS with ${valAddr}`
+    `Wasted ${gasAmount} of gas`
   );
   console.log("The transaction details are");
   console.log(receipt);
