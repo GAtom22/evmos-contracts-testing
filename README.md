@@ -2,12 +2,9 @@
 
 This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
 
-Try running some of the following tasks:
+To stake some tokens, follow these steps:
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+- create a `.env` file with your private key
+- run a node locally. Can use the `local_node.sh` on evmos repo.
+- edit the corresponding validator address in the `scripts/stake.js`
+- run the following command: `npx hardhat run scripts/stake.js --network evmoslocal`
