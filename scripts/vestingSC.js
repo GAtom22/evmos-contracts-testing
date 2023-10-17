@@ -7,31 +7,55 @@
 const hre = require("hardhat");
 
 async function main() {
-  // const amt = hre.ethers.parseEther("10");
+  // =====================================
+  //      STAGE 1 - deploy contract
+  // =====================================
 
-  // const vestingContract = await hre.ethers.getContractFactory("SCVesting");
-  // const contract = await vestingContract.deploy();
+  const amt = hre.ethers.parseEther("10");
 
-  // console.log(`SCVesting contract deployed at ${await contract.getAddress()}`);
+  const vestingContract = await hre.ethers.getContractFactory("SCVesting");
+  const contract = await vestingContract.deploy();
 
-  // const tx = await contract.deposit({ value: amt });
-  // await tx.wait(1);
+  const contractAddr = await contract.getAddress()
 
-  // console.log(`Deposited ${amt} into the contract`);
+  console.log(`SCVesting contract deployed at ${contractAddr}`);
+  const [signer] = await hre.ethers.getSigners();
 
-  // ==================
-  //      STAGE 2
-  // ==================
-  const contractAddr = "0x3B3b787CEF3Df6291815E20E92525B8F9f78844C";
-  const contract = await hre.ethers.getContractAt("SCVesting", contractAddr);
+  console.log(`Sender balance ${hre.ethers.formatEther(await hre.ethers.provider.getBalance(signer))}`);
 
-  const tx = await contract.fundVestingFromContractWithtApproval(
-    "0xD8B6c45Dfb4eb12881fB313ada51D43a54A0F898", //dev0
-    1696825289,
-    [[5000, [["aevmos", 10000000]]]],
-    [[5000, [["aevmos", 10000000]]]]
-  );
+  const tx = await signer.sendTransaction({
+    to: contractAddr,
+    value: amt,
+  });
   await tx.wait(1);
+  
+  console.log(`Deposited ${hre.ethers.formatEther(amt)} into the contract`);
+  const contractBalance = await hre.ethers.provider.getBalance(contractAddr)
+  // For some reason, the contract balance is not changed ??
+  console.log(`Contract balance ${hre.ethers.formatEther(contractBalance)}`);
+  
+  console.log(`Sender balance ${hre.ethers.formatEther(await hre.ethers.provider.getBalance(signer))}`);
+  // =========================================================
+  //      STAGE 2 - call func after creating vesting acc
+  // =========================================================
+  // const contractAddr = "0x4C30084718f0aE977157B77669d6606CFb1b9CA2";
+  // const contract = await hre.ethers.getContractAt("SCVesting", contractAddr);
+
+
+  // const lockupPeriods = [
+  //   { length: 5000, amount: [{ denom: "aevmos", amount: 1000 }] },
+  // ];
+  // const vestingPeriods = [
+  //   { length: 5000, amount: [{ denom: "aevmos", amount: 1000 }] },
+  // ];
+
+  // const tx = await contract.fundVestingFromContractWithtApproval(
+  //   "0xC6Fe5D33615a1C52c08018c47E8Bc53646A0E101", //dev0
+  //   1686825289,
+  //   lockupPeriods,
+  //   vestingPeriods
+  // );
+  // await tx.wait(1);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

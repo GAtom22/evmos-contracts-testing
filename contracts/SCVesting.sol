@@ -4,7 +4,10 @@ pragma solidity >=0.8.18;
 import "./Vesting.sol";
 
 contract SCVesting {
-    function deposit() external payable {}
+    receive() external payable {
+        // This function is called when Ether is sent to the contract.
+        // You can add custom logic here, if needed.
+    }
 
     function getBalance() public view returns (uint256) {
         return address(this).balance;
@@ -23,6 +26,14 @@ contract SCVesting {
             lockupPeriods,
             vestingPeriods
         );
+    }
+
+    function approve() external {
+        bool approved = VESTING_CONTRACT.approve(
+            address(this),
+            MSG_FUND_VESTING_ACCOUNT
+        );
+        require(approved, "Approval was not successfull");
     }
 
     function fundVestingFromContractWithtApproval(
