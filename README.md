@@ -9,4 +9,4 @@ To stake some tokens, follow these steps:
 - run a node locally. Can use the `local_node.sh` on evmos repo.
 - edit the corresponding validator address in the `scripts/stake.js`
 - run the following command: `npx hardhat run scripts/stake.js --network evmoslocal`
-- you can run the scripts against testnet or mainnet too. Just use the `--network` flag and specify `evmostestnet` or `evmosmainnet` correspondingly
+- you can run the scripts against testnet or mainnet too. Just use the `--network` flag and specify `evmostestnet` or `evmosmainnet` accordingly
